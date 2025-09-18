@@ -3,6 +3,7 @@
     Ce fichier contient la fonction principale du jeu du pendu.
 */
 require_once __DIR__.DIRECTORY_SEPARATOR.'data.php';
+require_once __DIR__.DIRECTORY_SEPARATOR.'view.php';
 
 
 /**
@@ -12,7 +13,8 @@ require_once __DIR__.DIRECTORY_SEPARATOR.'data.php';
  */
 function start(): void
 {
-    echo "Bonjour ! Bienvenue dans le jeu du pendu." . PHP_EOL;
+    displayGameMenu();
+    /*
     $result = getDataInJsonAndReturnByArrayData(__DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "data/dictionnaire.json");
     if ($result === null) {
         echo "Erreur : impossible de charger le dictionnaire." . PHP_EOL;
@@ -20,5 +22,6 @@ function start(): void
     }
 
     $wordSelected = retrieveARandomWordFromATableComposedOfTables($result);
+    */
 }
 ?>

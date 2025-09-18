@@ -8,8 +8,9 @@
  * @param string $path Chemin du fichier JSON à lire.
  * @return array|null Tableau associatif des données JSON ou null si le fichier n'existe pas.
  */
-function getDataInJsonAndReturnByArrayData(string $path): ?array
+function getDataInJsonAndReturnByArrayData(): ?array
 {
+    $path = __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'dictionnaire.json';
     if (!file_exists($path)) {
         return null;
     }
@@ -23,29 +24,19 @@ function getDataInJsonAndReturnByArrayData(string $path): ?array
  * @param array $data Tableau de tableaux contenant les mots.
  * @return string Un mot aléatoire.
  */
-function retrieveARandomWordFromATableComposedOfTables(array $data): string
+function retrieveARandomWordFromATableComposedOfTables(int $categoryIndex): string
 {
+    $data = getDataInJsonAndReturnByArrayData();
     $keys = array_keys($data);
-    echo "Les catégories suivantes de mots sont disponibles :" . PHP_EOL;
-    for ($i = 0, $iMax = count($keys); $i < $iMax; $i++) {
-        echo ((string)($i + 1)) . " " . $keys[$i] . PHP_EOL;
-    }
-    $isValid = false;
-    while (!$isValid) {
-        echo "Veuillez choisir une catégorie (entrez le numéro) : ";
-        $answer = trim(readline());
+    $chosenKey = $keys[$categoryIndex - 1];
+    $words = $data[$chosenKey];
+    $randomIndex = array_rand($words);
+    return $words[$randomIndex];
 
-        if (ctype_digit($answer) && ((int)$answer) >= 1 && ((int)$answer) <= count($keys)) {
-            $isValid = true; // Sort de la boucle si l'entrée est valide
-        } else {
-            echo "Erreur : catégorie invalide. Veuillez réessayer." . PHP_EOL;
-        }
-    }
+}
 
-    $chosenIndex = ((int)$answer) - 1;
-    $chosenKey = $keys[$chosenIndex];
-    $tableOfTheChosenCategory = $data[$chosenKey];
-    $randomIndex = array_rand($tableOfTheChosenCategory);
-    return $tableOfTheChosenCategory[$randomIndex] ;
+function getTheNameOfTheWordCategoryInAllData(): array{
+    $alldata = getDataInJsonAndReturnByArrayData();
+    return array_keys($alldata);
 }
 ?>
