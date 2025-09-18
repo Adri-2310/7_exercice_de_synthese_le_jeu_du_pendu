@@ -2,7 +2,7 @@
 /*
     Ce fichier contient la fonction principale du jeu du pendu.
 */
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'models'.DIRECTORY_SEPARATOR.'data.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR .'controllers'.DIRECTORY_SEPARATOR.'controllerGameData.php';
 require_once __DIR__ . DIRECTORY_SEPARATOR .'views'.DIRECTORY_SEPARATOR.'viewGameMenu.php';
 require_once __DIR__ . DIRECTORY_SEPARATOR .'views'.DIRECTORY_SEPARATOR.'viewGame.php';
 
@@ -15,10 +15,9 @@ require_once __DIR__ . DIRECTORY_SEPARATOR .'views'.DIRECTORY_SEPARATOR.'viewGam
 function start(): void
 {
     $wordsFound =displayGameMenu();
-    //$hiddenWords = fonction du controllers pour cacher le mot;
+    $hiddenWords = createHiddenWord($wordsFound);
     $livesRemaining = 6;
     $letterUsed = "";
-    $hiddenWords= "-------";
     displayGame($hiddenWords,$livesRemaining,$letterUsed);
     // $proposedLetters = fonction dans la vue qui va demander une lettresByUser;
     //$hiddenWords = fonction du controllers pour dévoiler les lettres proposé;
