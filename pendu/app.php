@@ -2,8 +2,9 @@
 /*
     Ce fichier contient la fonction principale du jeu du pendu.
 */
-require_once __DIR__.DIRECTORY_SEPARATOR.'data.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'models'.DIRECTORY_SEPARATOR.'data.php';
 require_once __DIR__ . DIRECTORY_SEPARATOR .'views'.DIRECTORY_SEPARATOR.'viewGameMenu.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR .'views'.DIRECTORY_SEPARATOR.'viewGame.php';
 
 
 /**
@@ -13,15 +14,13 @@ require_once __DIR__ . DIRECTORY_SEPARATOR .'views'.DIRECTORY_SEPARATOR.'viewGam
  */
 function start(): void
 {
-    displayGameMenu();
-    /*
-    $result = getDataInJsonAndReturnByArrayData(__DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "data/dictionnaire.json");
-    if ($result === null) {
-        echo "Erreur : impossible de charger le dictionnaire." . PHP_EOL;
-        return;
-    }
-
-    $wordSelected = retrieveARandomWordFromATableComposedOfTables($result);
-    */
+    $wordsFound =displayGameMenu();
+    //$hiddenWords = fonction du controllers pour cacher le mot;
+    $livesRemaining = 6;
+    $letterUsed = "";
+    $hiddenWords= "-------";
+    displayGame($hiddenWords,$livesRemaining,$letterUsed);
+    // $proposedLetters = fonction dans la vue qui va demander une lettresByUser;
+    //$hiddenWords = fonction du controllers pour dévoiler les lettres proposé;
 }
 ?>

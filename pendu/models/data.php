@@ -10,7 +10,7 @@
  */
 function getDataInJsonAndReturnByArrayData(): ?array
 {
-    $path = __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.'dictionnaire.json';
+    $path = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..'.DIRECTORY_SEPARATOR.'data' . DIRECTORY_SEPARATOR . 'dictionnaire.json';
     if (!file_exists($path)) {
         return null;
     }
