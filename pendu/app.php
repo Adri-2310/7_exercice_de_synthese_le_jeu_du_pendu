@@ -3,7 +3,7 @@
     Ce fichier contient la fonction principale du jeu du pendu.
 */
 require_once __DIR__.DIRECTORY_SEPARATOR.'data.php';
-require_once __DIR__.DIRECTORY_SEPARATOR.'view.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR .'views'.DIRECTORY_SEPARATOR.'viewGameMenu.php';
 
 
 /**

@@ -2,7 +2,7 @@
 /*
     Ce fichier contient les fonctions principales de la gestion de la vue du jeu du pendu.
 */
-require_once __DIR__.DIRECTORY_SEPARATOR.'controller.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR .'..'. DIRECTORY_SEPARATOR.'controller.php';
 
 /**
  * Affiche le menu principal du jeu et gère le choix de l'utilisateur.
