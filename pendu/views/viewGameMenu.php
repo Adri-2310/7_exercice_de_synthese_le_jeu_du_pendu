@@ -1,44 +1,53 @@
 <?php
 /*
-    Ce fichier contient les fonctions principales des menus de la vue du jeu du pendu.
+    Fichier : viewGameMenu.php
+    Rôle : Gère l'interface utilisateur pour la navigation dans les menus du jeu du pendu.
+    Contient les fonctions d'affichage et de traitement des choix utilisateur pour :
+    - Le menu principal (Jouer/Quitter)
+    - La sélection de catégorie de mots
 */
+
 require_once __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR .'controllers'.DIRECTORY_SEPARATOR.'controllerDataInDatasFile.php';
 
 /**
- * Affiche le menu principal du jeu et gère la sélection de l'utilisateur.
+ * Affiche le menu principal et traite la sélection utilisateur.
  *
- * Cette fonction présente les options pour démarrer le jeu ou quitter.
- * Elle valide la saisie de l'utilisateur et exécute l'action correspondante.
+ * Processus :
+ * 1. Affiche les options disponibles (Jouer ou Quitter)
+ * 2. Valide la saisie utilisateur (doit être "1" ou "2")
+ * 3. Redirige vers le menu de catégorie ou termine le programme
  *
- * @return string Retourne le résultat de la fonction displayWordCategoryChoiceMenu
- *                si l'utilisateur choisit de démarrer le jeu.
+ * @return string Le mot à deviner (via displayWordCategoryChoiceMenu) si l'utilisateur choisit de jouer
+ * @exit Termine le programme si l'utilisateur choisit de quitter
  */
 function displayGameMenu(): string
 {
-    $isValid = false; // Variable pour contrôler la validité de la saisie
+    $isValid = false; // Indicateur de validité de la saisie utilisateur
 
-    // Boucle tant que la saisie n'est pas valide
+    // Boucle jusqu'à obtenir une saisie valide
     while (!$isValid) {
-        // Affichage du menu principal
+        // Affichage des options disponibles
         echo "Bonjour ! Bienvenue dans le jeu du pendu." . PHP_EOL;
         echo "1. Jouer" . PHP_EOL;
         echo "2. Quitter" . PHP_EOL;
         echo "Veuillez choisir une option : ";
 
-        $answer = trim(readline()); // Récupère et nettoie la saisie utilisateur
+        $answer = trim(readline());
 
-        // Gestion des choix possibles
+        // Traitement du choix utilisateur
         switch ($answer) {
             case "1":
-                $isValid = true; // Met fin à la boucle
-                // Appelle la fonction pour choisir une catégorie de mots
+                $isValid = true;
+                // L'utilisateur souhaite jouer : affichage du menu des catégories
                 return displayWordCategoryChoiceMenu();
+
             case "2":
-                $isValid = true; // Met fin à la boucle
+                $isValid = true;
                 echo "Au revoir !" . PHP_EOL;
-                exit; // Quitte le programme
+                exit; // Sortie du programme
+
             default:
-                // Message d'erreur si la saisie est invalide
+                // Gestion des saisies invalides
                 echo PHP_EOL."Veuillez choisir une option valide." . PHP_EOL;
                 echo PHP_EOL;
         }
@@ -46,43 +55,49 @@ function displayGameMenu(): string
 }
 
 /**
- * Affiche le menu de choix des catégories de mots et gère la sélection de l'utilisateur.
+ * Affiche les catégories de mots disponibles et traite la sélection utilisateur.
  *
- * Cette fonction liste les catégories disponibles et demande à l'utilisateur
- * d'en choisir une. Elle valide la saisie et retourne un mot aléatoire de la catégorie choisie.
+ * Fonctionnement :
+ * 1. Récupère la liste des catégories via getTheNameOfTheWordCategory()
+ * 2. Affiche chaque catégorie avec un numéro d'index (1-N)
+ * 3. Valide que la saisie correspond à un numéro de catégorie existant
+ * 4. Retourne un mot aléatoire de la catégorie sélectionnée via getRandomWordFromTheCategory()
  *
- * @return string Retourne un mot aléatoire de la catégorie sélectionnée.
+ * @return string Un mot aléatoire de la catégorie choisie
+ *
+ * @see getTheNameOfTheWordCategory() Pour la récupération des catégories
+ * @see getRandomWordFromTheCategory() Pour la sélection du mot
  */
 function displayWordCategoryChoiceMenu(): string
 {
-    // Affiche les catégories disponibles
+    // Affichage des catégories disponibles
     echo "Les catégories suivantes de mots sont disponibles :" . PHP_EOL;
 
-    // Récupère la liste des noms de catégories depuis le contrôleur
+    // Récupération des noms de catégories depuis le contrôleur
     $allCategoryWord = getTheNameOfTheWordCategory();
 
-    // Affiche chaque catégorie avec un numéro
+    // Affichage numéroté des catégories (1 à N)
     for ($i = 0, $iMax = count($allCategoryWord); $i < $iMax; $i++) {
         echo ((string)($i + 1)) . " " . $allCategoryWord[$i] . PHP_EOL;
     }
 
-    $isValid = false; // Variable pour contrôler la validité de la saisie
+    $isValid = false; // Réinitialisation de l'indicateur de validité
 
-    // Boucle tant que la saisie n'est pas valide
+    // Boucle de validation de la saisie utilisateur
     while (!$isValid) {
         echo "Veuillez choisir une catégorie (entrez le numéro) : ";
-        $answer = trim(readline()); // Récupère et nettoie la saisie utilisateur
+        $answer = trim(readline());
 
-        // Vérifie que la saisie est un nombre valide et dans la plage des catégories disponibles
+        // Vérification : doit être un nombre entier dans la plage [1, nombre de catégories]
         if (ctype_digit($answer) && ((int)$answer) >= 1 && ((int)$answer) <= count($allCategoryWord)) {
-            $isValid = true; // Met fin à la boucle si la saisie est valide
+            $isValid = true; // Saisie valide : sortie de boucle
         } else {
-            // Message d'erreur si la saisie est invalide
+            // Message d'erreur pour saisie invalide
             echo "Erreur : catégorie invalide. Veuillez réessayer." . PHP_EOL;
         }
     }
 
-    // Retourne un mot aléatoire de la catégorie choisie
+    // Retourne un mot aléatoire de la catégorie sélectionnée
     return getRandomWordFromTheCategory(((int)$answer));
 }
 ?>

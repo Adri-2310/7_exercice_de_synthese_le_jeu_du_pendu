@@ -1,12 +1,28 @@
 <?php
 /*
-    Ce fichier contient les fonctions principales de la gestion des données du jeu du pendu.
+    Fichier : controllerDataInDatasFile.php
+    Rôle : Gestion centralisée des données du jeu du pendu.
+    Fonctionnalités :
+    - Lecture et décodage du fichier JSON de dictionnaire
+    - Récupération aléatoire de mots par catégorie
+    - Extraction des noms de catégories disponibles
 */
+
 /**
- * Lit un fichier JSON à partir du chemin fourni et retourne les données sous forme de tableau associatif.
+ * Charge et décode le fichier JSON contenant le dictionnaire de mots.
  *
- * @param string $path Chemin du fichier JSON à lire.
- * @return array|null Tableau associatif des données JSON ou null si le fichier n'existe pas.
+ * Localisation du fichier :
+ * ./data/dictionnaire.json (relatif à ce fichier)
+ *
+ * @return array|null Tableau associatif des données si le fichier existe et est valide,
+ *                    null en cas d'erreur (fichier introuvable ou illisible)
+ *
+ * @example Retourne :
+ *          [
+ *              "animaux" => ["chien", "chat", "lapin"],
+ *              "pays" => ["France", "Belgique", "Allemagne"]
+ *          ]
+ *          ou null si le fichier est inaccessible
  */
 function getDataInJsonAndReturnByArrayData(): ?array
 {
@@ -19,10 +35,16 @@ function getDataInJsonAndReturnByArrayData(): ?array
 }
 
 /**
- * Récupère un mot aléatoire dans un tableau de tableaux.
+ * Sélectionne un mot aléatoire dans une catégorie spécifique.
  *
- * @param array $data Tableau de tableaux contenant les mots.
- * @return string Un mot aléatoire.
+ * @param int $categoryIndex Index de la catégorie (1 pour la première catégorie, 2 pour la deuxième, etc.)
+ * @return string Un mot aléatoire de la catégorie demandée
+ *
+ * @throws RuntimeException Si le fichier JSON est invalide ou si la catégorie n'existe pas
+ *
+ * @example Pour $categoryIndex = 1 et un JSON comme :
+ *          {"animaux":["chien","chat"],"pays":["France"]}
+ *          Peut retourner "chien" ou "chat"
  */
 function retrieveARandomWordFromATableComposedOfTables(int $categoryIndex): string
 {
@@ -32,10 +54,19 @@ function retrieveARandomWordFromATableComposedOfTables(int $categoryIndex): stri
     $words = $data[$chosenKey];
     $randomIndex = array_rand($words);
     return $words[$randomIndex];
-
 }
 
-function getTheNameOfTheWordCategoryInAllData(): array{
+/**
+ * Récupère la liste de toutes les catégories disponibles dans le dictionnaire.
+ *
+ * @return array Tableau des noms de catégories (clés du JSON)
+ *
+ * @example Pour un JSON comme :
+ *          {"fruits":["pomme"],"légumes":["carotte"]}
+ *          Retourne : ["fruits", "légumes"]
+ */
+function getTheNameOfTheWordCategoryInAllData(): array
+{
     $alldata = getDataInJsonAndReturnByArrayData();
     return array_keys($alldata);
 }
