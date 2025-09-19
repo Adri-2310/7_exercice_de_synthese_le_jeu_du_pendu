@@ -1,28 +1,15 @@
 <?php
 /**
- * Point d'entrée principal de l'application "Jeu du Pendu".
- *
- * Ce fichier initialise l'application avec :
- * - La déclaration stricte des types (strict_types)
- * - Le chargement des dépendances nécessaires
- * - L'exécution du point d'entrée principal
+ * Point de départ du jeu "Le Pendu".
+ * Ce fichier lance simplement l'application.
  */
 
-// Activation du typage strict pour tout le projet
+// Force PHP à vérifier strictement les types de données (évite les erreurs de conversion automatique)
 declare(strict_types=1);
 
-// Chargement du cœur de l'application
-require_once __DIR__.DIRECTORY_SEPARATOR.'pendu'.DIRECTORY_SEPARATOR.'app.php';
+// Charge le cœur de l'application depuis le dossier "pendu"
+require_once __DIR__ . '/pendu/app.php';
 
-/*
- * Initialisation et lancement du jeu :
- * 1. Charge les dépendances via le require_once ci-dessus
- * 2. Appelle la fonction start() définie dans 'pendu/app.php'
- *    qui contient la logique principale du jeu
- * 3. La fonction start() gère :
- *    - L'affichage du menu principal
- *    - La sélection du mot à deviner
- *    - Le déroulement de la partie
- */
+// Démarre le jeu (la fonction start() est définie dans app.php)
 start();
 ?>

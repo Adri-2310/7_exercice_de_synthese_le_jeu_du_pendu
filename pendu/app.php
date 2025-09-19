@@ -1,52 +1,88 @@
 <?php
-/*
-    Fichier principal du jeu du Pendu.
-    Gère l'initialisation du jeu, l'affichage du menu et le déroulement d'une partie.
-*/
+/**
+ * Fichier : app.php
+ * Gère l'interface utilisateur et le flux principal du jeu du Pendu
+ */
 
-// Inclusion des dépendances nécessaires
-require_once __DIR__ . DIRECTORY_SEPARATOR .'controllers'.DIRECTORY_SEPARATOR.'controllerGameData.php';
-require_once __DIR__ . DIRECTORY_SEPARATOR .'views'.DIRECTORY_SEPARATOR.'viewGameMenu.php';
-require_once __DIR__ . DIRECTORY_SEPARATOR .'views'.DIRECTORY_SEPARATOR.'viewGame.php';
+// Active le mode strict pour le typage des variables
+declare(strict_types=1);
+
+// Charge le fichier contenant la logique du jeu
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'controllerGameData.php';
 
 /**
- * Lance une nouvelle partie du jeu du Pendu.
+ * Affiche le menu principal et retourne le choix de l'utilisateur
  *
- * Cette fonction effectue le déroulement complet d'une partie :
- * 1. Affiche le menu de sélection de difficulté et récupère le mot à deviner
- * 2. Initialise les variables de jeu (mot caché, vies restantes, lettres utilisées)
- * 3. Affiche l'interface de jeu initiale
+ * @return string La réponse de l'utilisateur (1 ou 2)
+ */
+function displayMainMenu(): string
+{
+    // Affiche le menu et demande à l'utilisateur de faire un choix
+    echo "======================" . PHP_EOL;
+    echo "Bonjour ! Bienvenue dans le jeu du pendu." . PHP_EOL;
+    echo "======================" . PHP_EOL;
+    echo "1. Jouer" . PHP_EOL;
+    echo "2. Quitter" . PHP_EOL;
+    echo "Veuillez choisir une option : ";
+
+    // Retourne la saisie utilisateur sans espaces superflus
+    return trim(readline());
+}
+
+/**
+ * Demande à l'utilisateur s'il souhaite rejouer
  *
- * @return void
+ * @return bool True si l'utilisateur veut rejouer, sinon termine le programme
+ */
+function askToPlayAgain(): bool
+{
+    // Affiche les options de fin de partie
+    echo PHP_EOL . "======================" . PHP_EOL;
+    echo "1. Rejouer" . PHP_EOL;
+    echo "2. Quitter" . PHP_EOL;
+
+    // Boucle jusqu'à obtenir une réponse valide
+    while (true) {
+        echo "Que souhaitez-vous faire ? ";
+        $answer = trim(readline());
+
+        if ($answer === "1") {
+            return true;  // Recommencer une partie
+        }
+        elseif ($answer === "2") {
+            echo "Au revoir !" . PHP_EOL;
+            exit;  // Quitter le programme
+        }
+        else {
+            // Message d'erreur pour choix invalide
+            echo PHP_EOL . "Veuillez choisir une option valide." . PHP_EOL;
+        }
+    }
+}
+
+/**
+ * Point d'entrée principal du jeu
+ * Gère la boucle principale des parties
  */
 function start(): void
 {
-    // Étape 1 : Affichage du menu et sélection du mot
-    // La fonction displayGameMenu() retourne le mot à deviner en fonction du choix de catégorie
-    $wordsFound = displayGameMenu();
+    // Boucle infinie pour le menu principal
+    while (true) {
+        $choice = displayMainMenu();
 
-    // Étape 2 : Préparation du jeu
-    // Crée une version masquée du mot (ex: "test" devient "****")
-    $hiddenWords = createHiddenWord($wordsFound);
-
-    // Initialisation des paramètres de jeu :
-    // - 6 vies (têtes de pendu classiques)
-    // - Chaîne vide pour stocker les lettres déjà proposées
-    $livesRemaining = 6;
-    $letterUsed = "";
-
-    // Étape 3 : Lancement de l'interface de jeu
-    // Affiche le mot masqué, les vies restantes et les lettres utilisées
-    // Note : La logique de saisie des lettres et de mise à jour sera implémentée ultérieurement
-    displayGame($hiddenWords, $livesRemaining, $letterUsed);
-
-    // TODO : Implémenter la boucle de jeu principale qui :
-    // 1. Demande une lettre à l'utilisateur
-    $ChosenLetter = getLetterFromUser();
-    $result =checkTheLetterIsInTheWords($ChosenLetter,$wordsFound);
-
+        if ($choice === "1") {
+            // Boucle de jeu : lance des parties tant que l'utilisateur veut rejouer
+            do {
+                playGame();  // Fonction définie dans controllerGameData.php
+            } while (askToPlayAgain());
+        }
+        elseif ($choice === "2") {
+            echo "Au revoir !" . PHP_EOL;
+            exit;  // Quitter le programme
+        }
+        else {
+            // Message d'erreur pour choix invalide
+            echo PHP_EOL . "Veuillez choisir une option valide." . PHP_EOL;
+        }
+    }
 }
-
-
-
-?>
