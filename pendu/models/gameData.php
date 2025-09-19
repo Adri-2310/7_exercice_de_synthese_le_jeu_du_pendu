@@ -1,91 +1,83 @@
 <?php
-/*
-    Fichier : gameData.php
-    Rôle : Module de traitement des données pour le jeu du Pendu.
-
-    Ce fichier contient les fonctions de base pour :
-    - La création et manipulation des mots masqués
-    - La vérification des lettres proposées
-    - La révélation progressive des lettres devinées
-
-    Dépendances : Aucune
-*/
+/**
+ * Fichier : gameData.php
+ * Rôle : Traitement des données et logique métier pour le jeu du Pendu
+ *
+ * Ce fichier contient les fonctions pour :
+ * - Créer une version masquée d'un mot
+ * - Vérifier la présence d'une lettre dans un mot
+ * - Révéler les lettres devinées dans le mot masqué
+ */
 
 /**
- * Génère une version masquée d'un mot donné.
+ * Crée une version complètement masquée d'un mot
  *
- * Chaque caractère du mot est remplacé par un astérisque (*)
- * pour créer une représentation masquée de même longueur.
+ * @param string $givenWord Le mot à masquer
+ * @return string Une chaîne de caractères composée d'étoiles (*) de même longueur que le mot
  *
- * @param string $givenWord Le mot original à masquer
- * @return string Une chaîne composée uniquement d'astérisques (*)
- *                de même longueur que le mot original
- *
- * @example createHiddenWordAccordingToGivenWord("test") => "****"
- * @example createHiddenWordAccordingToGivenWord("Bonjour") => "*******"
+ * Exemple : "bonjour" → "*******"
  */
 function createHiddenWordAccordingToGivenWord(string $givenWord): string
 {
     $hiddenWord = "";
+
+    // Parcourt chaque caractère du mot et le remplace par une étoile
     for ($i = 0, $iMax = strlen($givenWord); $i < $iMax; $i++) {
         $hiddenWord .= "*";
     }
+
     return $hiddenWord;
 }
 
 /**
- * Vérifie la présence d'une lettre dans un mot.
+ * Vérifie si une lettre est présente dans un mot (insensible à la casse)
  *
- * Effectue une recherche insensible à la casse pour déterminer
- * si la lettre proposée existe dans le mot à deviner.
+ * @param string $chosenLetter La lettre à vérifier
+ * @param string $wordsFound Le mot dans lequel chercher
+ * @return bool True si la lettre est présente, false sinon
  *
- * @param string $chosenLetter La lettre proposée par le joueur (1 caractère)
- * @param string $wordsFound Le mot complet à deviner
- * @return bool True si la lettre est trouvée, false sinon
- *
- * @note La comparaison est insensible à la casse
+ * La comparaison est insensible à la casse (majuscule/minuscule)
  */
 function checkTheLetterIsInTheWordsAndReturnBool(string $chosenLetter, string $wordsFound): bool
 {
-    // Vérifie si la lettre est présente dans le mot (insensible à la casse)
+    // Convertit le mot et la lettre en minuscules pour une comparaison insensible à la casse
     return str_contains(strtolower($wordsFound), strtolower($chosenLetter));
 }
 
 /**
- * Révèle les occurrences d'une lettre dans un mot masqué.
+ * Révèle les occurrences d'une lettre dans le mot masqué
  *
- * Pour chaque occurrence de la lettre dans le mot secret,
- * remplace le caractère masqué par la lettre correspondante.
- *
- * @param string $letter La lettre devinée par le joueur
- * @param string $secretWord Le mot secret complet à deviner
- * @param string $hiddenWord Le mot actuellement masqué (format: "_ _ _ _")
- *
+ * @param string $letter La lettre devinée
+ * @param string $secretWord Le mot secret original
+ * @param string $hiddenWord Le mot actuellement masqué
  * @return string Le mot masqué mis à jour avec les lettres révélées
  *
- * @note Problème d'incohérence détecté :
- *       - createHiddenWordAccordingToGivenWord() génère des "*"
- *       - Cette fonction attend des "_" comme caractères de masquage
- *       Cela peut causer des dysfonctionnements dans le jeu
+ * Processus :
+ * 1. Convertit le mot masqué et le mot secret en tableaux de caractères
+ * 2. Compare chaque caractère du mot secret avec la lettre devinée
+ * 3. Remplace les étoiles par la lettre aux positions correspondantes
+ * 4. Conserve la casse originale du mot secret
  *
- * @example revealLetterInHiddenWord('e', 'test', '_ _ _ _') => 't e _ _'
+ * Note : La fonction ne vérifie pas si la lettre est effectivement dans le mot
+ * (cette vérification doit être faite avant avec checkTheLetterIsInTheWordsAndReturnBool)
  */
 function revealLetterInHiddenWord(string $letter, string $secretWord, string $hiddenWord): string
 {
-    // Convertir en tableaux pour faciliter la manipulation
+    // Conversion en tableaux pour une manipulation plus facile
     $hiddenArray = str_split($hiddenWord);
     $secretArray = str_split(strtolower($secretWord));
     $letter = strtolower($letter);
 
-    // Parcourir chaque caractère du mot secret
+    // Parcourt chaque caractère du mot secret
     for ($i = 0, $iMax = strlen($secretWord); $i < $iMax; $i++) {
-        // Si la lettre correspond et que la position est encore masquée ('_')
+        // Si la lettre correspond et que la position est encore masquée ('*')
         if ($secretArray[$i] === $letter && $hiddenArray[$i] === '*') {
-            $hiddenArray[$i] = $secretWord[$i]; // Révéler la lettre (casse originale conservée)
+            // Révèle la lettre en conservant sa casse originale
+            $hiddenArray[$i] = $secretWord[$i];
         }
     }
 
-    // Reconvertir en chaîne avec des espaces entre chaque caractère
+    // Reconvertit le tableau en chaîne de caractères
     return implode('', $hiddenArray);
 }
 ?>

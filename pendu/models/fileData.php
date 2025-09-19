@@ -1,72 +1,80 @@
 <?php
-/*
-    Fichier : controllerDataInDatasFile.php
-    Rôle : Gestion centralisée des données du jeu du pendu.
-    Fonctionnalités :
-    - Lecture et décodage du fichier JSON de dictionnaire
-    - Récupération aléatoire de mots par catégorie
-    - Extraction des noms de catégories disponibles
-*/
+/**
+ * Fichier : controllerDataInDatasFile.php
+ * Rôle : Gestion des données du dictionnaire pour le jeu du Pendu
+ *
+ * Ce fichier contient les fonctions pour :
+ * - Lire et décoder le fichier JSON contenant le dictionnaire
+ * - Récupérer des mots aléatoires par catégorie
+ * - Obtenir la liste des catégories disponibles
+ */
 
 /**
- * Charge et décode le fichier JSON contenant le dictionnaire de mots.
+ * Lit le fichier JSON du dictionnaire et retourne son contenu sous forme de tableau associatif
  *
- * Localisation du fichier :
- * ./data/dictionnaire.json (relatif à ce fichier)
+ * @return array|null Retourne un tableau associatif des données ou null si le fichier n'existe pas
  *
- * @return array|null Tableau associatif des données si le fichier existe et est valide,
- *                    null en cas d'erreur (fichier introuvable ou illisible)
+ * Processus :
+ * 1. Construit le chemin vers le fichier dictionnaire.json
+ * 2. Vérifie l'existence du fichier
+ * 3. Lit le contenu du fichier
+ * 4. Décode le JSON en tableau associatif PHP
  *
- * @example Retourne :
- *          [
- *              "animaux" => ["chien", "chat", "lapin"],
- *              "pays" => ["France", "Belgique", "Allemagne"]
- *          ]
- *          ou null si le fichier est inaccessible
+ * Chemin relatif : ../../data/dictionnaire.json (remonte de 2 niveaux puis descend dans data)
  */
 function getDataInJsonAndReturnByArrayData(): ?array
 {
+    // Construction du chemin vers le fichier JSON
     $path = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..'.DIRECTORY_SEPARATOR.'data' . DIRECTORY_SEPARATOR . 'dictionnaire.json';
+
+    // Vérification de l'existence du fichier
     if (!file_exists($path)) {
-        return null;
+        return null; // Retourne null si le fichier n'existe pas
     }
+    // Lecture et décodage du fichier JSON
     $content = file_get_contents($path);
-    return json_decode($content, true);
+    return json_decode($content, true); // Le paramètre true permet d'obtenir un tableau associatif plutôt qu'un objet
 }
 
 /**
- * Sélectionne un mot aléatoire dans une catégorie spécifique.
+ * Récupère un mot aléatoire d'une catégorie spécifique
  *
- * @param int $categoryIndex Index de la catégorie (1 pour la première catégorie, 2 pour la deuxième, etc.)
- * @return string Un mot aléatoire de la catégorie demandée
+ * @param int $categoryIndex Index de la catégorie dans le tableau des clés
+ * @return string Un mot aléatoire de la catégorie sélectionnée
  *
- * @throws RuntimeException Si le fichier JSON est invalide ou si la catégorie n'existe pas
- *
- * @example Pour $categoryIndex = 1 et un JSON comme :
- *          {"animaux":["chien","chat"],"pays":["France"]}
- *          Peut retourner "chien" ou "chat"
+ * Processus :
+ * 1. Récupère toutes les données du dictionnaire
+ * 2. Obtient la clé (nom de catégorie) correspondant à l'index
+ * 3. Sélectionne un mot aléatoire dans cette catégorie
  */
 function retrieveARandomWordFromATableComposedOfTables(int $categoryIndex): string
 {
+    // Récupération des données du dictionnaire
     $data = getDataInJsonAndReturnByArrayData();
+
+    // Récupération de la clé (nom de catégorie) à l'index spécifié
     $keys = array_keys($data);
-    $chosenKey = $keys[$categoryIndex - 1];
+    $chosenKey = $keys[$categoryIndex];
+
+    // Sélection d'un mot aléatoire dans la catégorie
     $words = $data[$chosenKey];
     $randomIndex = array_rand($words);
+
     return $words[$randomIndex];
 }
 
 /**
- * Récupère la liste de toutes les catégories disponibles dans le dictionnaire.
+ * Récupère les noms de toutes les catégories disponibles
  *
- * @return array Tableau des noms de catégories (clés du JSON)
+ * @return array Tableau contenant les noms de toutes les catégories
  *
- * @example Pour un JSON comme :
- *          {"fruits":["pomme"],"légumes":["carotte"]}
- *          Retourne : ["fruits", "légumes"]
+ * Processus :
+ * 1. Récupère toutes les données du dictionnaire
+ * 2. Retourne les clés du tableau (qui représentent les noms de catégories)
  */
 function getTheNameOfTheWordCategoryInAllData(): array
 {
+    // Récupération des données et extraction des clés (noms de catégories)
     $alldata = getDataInJsonAndReturnByArrayData();
     return array_keys($alldata);
 }
