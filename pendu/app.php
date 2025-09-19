@@ -43,18 +43,10 @@ function start(): void
     // TODO : Implémenter la boucle de jeu principale qui :
     // 1. Demande une lettre à l'utilisateur
     $ChosenLetter = getLetterFromUser();
-    // 2. Met à jour l'affichage du mot en fonction des lettres trouvées
-    // 3. Décrémente les vies si erreur
-    // 4. Vérifie les conditions de victoire/défaite
-    // 5. Redirige vers un écran de fin de partie
+    $result =checkTheLetterIsInTheWords($ChosenLetter,$wordsFound);
 
-    // Exemple de code commenté pour la future implémentation :
-    // while ($livesRemaining > 0 && strpos($hiddenWords, '_') !== false) {
-    //     $proposedLetter = getLetterFromUser(); // À implémenter dans la vue
-    //     $hiddenWords = revealLetters($proposedLetter, $wordsFound, $hiddenWords); // À implémenter dans le contrôleur
-    //     $livesRemaining = updateLives($proposedLetter, $wordsFound, $livesRemaining);
-    //     $letterUsed .= $proposedLetter;
-    //     displayGame($hiddenWords, $livesRemaining, $letterUsed);
-    // }
 }
+
+
+
 ?>

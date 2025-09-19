@@ -6,3 +6,9 @@ require_once __DIR__ . DIRECTORY_SEPARATOR .'..'.DIRECTORY_SEPARATOR.'models'.DI
 function createHiddenWord(string $givenWord): string{
     return createHiddenWordAccordingToGivenWord($givenWord);
 }
+
+function checkTheLetterIsInTheWords(string $chosenLetter, string $wordsFound):bool
+{
+    return checkTheLetterIsInTheWordsAndReturnBool($chosenLetter,$wordsFound);
+}
+

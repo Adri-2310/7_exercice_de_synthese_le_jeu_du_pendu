@@ -9,3 +9,9 @@ function createHiddenWordAccordingToGivenWord(string $givenWord): string{
     }
     return $hiddenWord;
 }
+
+function checkTheLetterIsInTheWordsAndReturnBool(string $chosenLetter, string $wordsFound):bool
+{
+    // Vérifie si la lettre est présente dans le mot
+    return str_contains($wordsFound, $chosenLetter);
+}
